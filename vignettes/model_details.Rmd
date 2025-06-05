@@ -1,0 +1,116 @@
+---
+title: "Working with FARS Data: Model Details"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{model_details}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+devtools::load_all(".")
+```
+
+
+
+
+## Introduction
+This vignette demonstrates how to use the FARS (Fatality Analysis Reporting System) functions included in the FARSfunctions package. The FARS data contains information about fatal traffic accidents in the United States.
+
+## Available Functions
+The package includes five main functions for working with FARS data:
+
+- `fars_read()` - Read FARS CSV files
+- `make_filename()` - Generate filenames
+- `fars_read_years()` - Read data for multiple years
+- `fars_summarize_years()` - Summarize accidents by month and year
+- `fars_map_state()` - Create maps showing accident locations
+
+## Reading FARS Data
+
+### Basic File Reading
+The `fars_read()` function reads FARS CSV files and converts them to tibbles:
+
+```{r, eval = FALSE}
+# Read a single year's data
+data_2013 <- fars_read("accident_2013.csv")
+head(data_2013)
+```
+
+### Generating Filenames
+```{r, eval = FALSE}
+The `make_filename()` function creates filenames for FARS data:
+# Generate filenames for different years
+make_filename(2013)
+make_filename(2014)
+make_filename(2015)
+```
+
+
+## Working with Multiple Years
+
+### Reading Multiple Years
+
+```{r, eval = FALSE}
+The `fars_read_years()` function reads data for multiple years:
+# Read data for multiple years (returns list of tibbles)
+years_data <- fars_read_years(c(2013, 2014, 2015))
+
+# Example with invalid year (will show warning)
+mixed_data <- fars_read_years(c(2013, 9999))
+```
+
+
+### Summarizing by Years and Months
+Create summary tables showing accident counts by month and year:
+```{r, eval = FALSE}
+# Create summary table
+summary_table <- fars_summarize_years(c(2013, 2014, 2015))
+print(summary_table)
+```
+
+The resulting table shows:
+
+- Rows: Months (1-12, where 1=January, 12=December)
+- Columns: Years
+- Values: Number of accidents per month/year combination
+
+## Mapping Accidents by State
+
+### Creating State Maps
+```{r, eval = FALSE}
+The `fars_map_state()` function creates maps showing accident locations for specific states:
+# Map accidents in New York (state code 36) for 2015
+fars_map_state(36, 2015)
+
+# Map accidents in California (state code 6) for 2014
+fars_map_state(6, 2014)
+```
+
+### Important Notes about Mapping
+
+- State numbers must be valid FARS state codes
+- Invalid coordinates (longitude > 900, latitude > 90) are treated as missing values
+- If no accidents exist for the specified state/year, a message is displayed
+- The function uses the maps and graphics packages for visualization
+
+
+## Dependencies
+This package requires the following R packages:
+
+- readr - for reading CSV files
+- dplyr - for data manipulation
+- tidyr - for data reshaping
+- maps - for creating maps
+- graphics - for plotting points
+
+
