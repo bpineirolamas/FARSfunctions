@@ -1,0 +1,23 @@
+language: r
+cache: packages
+
+r:
+  - release
+  - devel
+
+warnings_are_errors: false
+
+before_install:
+  - R -e 'install.packages("devtools")'
+
+script:
+  - R CMD build .
+  - R CMD check *tar.gz
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
